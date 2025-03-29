@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { Button } from './components/ui/button'
 import ConfigForm from './components/ConfigForm'
@@ -54,10 +54,13 @@ function App() {
 
 // Config Page Component
 function ConfigPage() {
+  const navigate = useNavigate(); // Initialize the navigate function
+
   const handleSave = (config) => {
-    localStorage.setItem('buttonConfig', JSON.stringify(config))
-    alert('Configuration saved successfully!')
-  }
+    localStorage.setItem('buttonConfig', JSON.stringify(config));
+    alert('Configuration saved successfully!');
+    navigate('/output'); // Redirect to the output page
+  };
 
   return (
     <div className="space-y-6">
@@ -66,7 +69,7 @@ function ConfigPage() {
         <ConfigForm onSave={handleSave} />
       </div>
     </div>
-  )
+  );
 }
 
 // Output Page Component
