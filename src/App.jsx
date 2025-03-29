@@ -20,10 +20,20 @@ function App() {
                 </div>
                 <div className="flex items-center space-x-4">
                   <Link to="/">
-                    <Button variant="ghost" className="text-gray-600 hover:text-gray-900">Config</Button>
+                    <Button
+                      variant="outline"
+                      className="text-black hover:shadow-lg hover:translate-y-[-2px] transition-all duration-200"
+                    >
+                      Config
+                    </Button>
                   </Link>
                   <Link to="/output">
-                    <Button variant="ghost" className="text-gray-600 hover:text-gray-900">Output</Button>
+                    <Button
+                      variant="outline"
+                      className="text-black hover:shadow-lg hover:translate-y-[-2px] transition-all duration-200"
+                    >
+                      Output
+                    </Button>
                   </Link>
                 </div>
               </div>
