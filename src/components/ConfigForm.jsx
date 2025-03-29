@@ -1,111 +1,10 @@
 import { useState } from 'react'
-import styled from '@emotion/styled'
+import { Button } from './ui/button'
+import { Input } from './ui/input'
+import { Label } from './ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
+import { Card } from './ui/card'
 import { ACTION_TYPES, getActionConfig } from '../utils/actions'
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-`
-
-const ActionList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`
-
-const ActionItem = styled.div`
-  border: 1px solid #eef1f6;
-  padding: 1.5rem;
-  border-radius: 10px;
-  background: #f8fafc;
-  transition: all 0.3s ease;
-
-  &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  }
-`
-
-const Button = styled.button`
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  background: #2563eb;
-  color: white;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: #1d4ed8;
-    transform: translateY(-1px);
-  }
-
-  &.secondary {
-    background: #f1f5f9;
-    color: #344767;
-
-    &:hover {
-      background: #e2e8f0;
-    }
-  }
-
-  &.remove {
-    background: #fee2e2;
-    color: #ef4444;
-
-    &:hover {
-      background: #fecaca;
-    }
-  }
-`
-
-const Input = styled.input`
-  padding: 0.75rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  width: 100%;
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
-  transition: all 0.3s ease;
-
-  &:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-  }
-`
-
-const Select = styled.select`
-  padding: 0.75rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  width: 100%;
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
-  background: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-  }
-`
-
-const Label = styled.label`
-  color: #344767;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  display: block;
-`
-
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-`
 
 const ConfigForm = ({ onSave }) => {
   const [buttonLabel, setButtonLabel] = useState('')
@@ -153,77 +52,96 @@ const ConfigForm = ({ onSave }) => {
       case ACTION_TYPES.ALERT:
       case ACTION_TYPES.SHOW_TEXT:
         return (
-          <Input
-            type="text"
-            value={action.message || action.text || ''}
-            onChange={(e) => handleActionConfigChange(index, action.type === ACTION_TYPES.ALERT ? 'message' : 'text', e.target.value)}
-            placeholder={action.type === ACTION_TYPES.ALERT ? 'Alert message' : 'Text to show'}
-          />
+          <div className="space-y-2">
+            <Label>{action.type === ACTION_TYPES.ALERT ? 'Alert Message' : 'Text to Show'}</Label>
+            <Input
+              type="text"
+              value={action.message || action.text || ''}
+              onChange={(e) => handleActionConfigChange(index, action.type === ACTION_TYPES.ALERT ? 'message' : 'text', e.target.value)}
+              placeholder={action.type === ACTION_TYPES.ALERT ? 'Alert message' : 'Text to show'}
+            />
+          </div>
         )
 
       case ACTION_TYPES.SHOW_IMAGE:
         return (
-          <Input
-            type="url"
-            value={action.url || ''}
-            onChange={(e) => handleActionConfigChange(index, 'url', e.target.value)}
-            placeholder="Image URL"
-          />
+          <div className="space-y-2">
+            <Label>Image URL</Label>
+            <Input
+              type="url"
+              value={action.url || ''}
+              onChange={(e) => handleActionConfigChange(index, 'url', e.target.value)}
+              placeholder="Image URL"
+            />
+          </div>
         )
 
       case ACTION_TYPES.SET_STORAGE:
         return (
-          <>
+          <div className="space-y-2">
+            <Label>Storage Key</Label>
             <Input
               type="text"
               value={action.key || ''}
               onChange={(e) => handleActionConfigChange(index, 'key', e.target.value)}
               placeholder="Storage key"
+              className="mb-2"
             />
+            <Label>Storage Value</Label>
             <Input
               type="text"
               value={action.value || ''}
               onChange={(e) => handleActionConfigChange(index, 'value', e.target.value)}
               placeholder="Storage value"
             />
-          </>
+          </div>
         )
 
       case ACTION_TYPES.GET_STORAGE:
         return (
-          <Input
-            type="text"
-            value={action.key || ''}
-            onChange={(e) => handleActionConfigChange(index, 'key', e.target.value)}
-            placeholder="Storage key to fetch"
-          />
+          <div className="space-y-2">
+            <Label>Storage Key</Label>
+            <Input
+              type="text"
+              value={action.key || ''}
+              onChange={(e) => handleActionConfigChange(index, 'key', e.target.value)}
+              placeholder="Storage key to fetch"
+            />
+          </div>
         )
 
       case ACTION_TYPES.PROMPT_SHOW:
         return (
-          <>
+          <div className="space-y-2">
+            <Label>Prompt Message</Label>
             <Input
               type="text"
               value={action.prompt || ''}
               onChange={(e) => handleActionConfigChange(index, 'prompt', e.target.value)}
               placeholder="Prompt message"
+              className="mb-2"
             />
+            <Label>Template</Label>
             <Input
               type="text"
               value={action.template || ''}
               onChange={(e) => handleActionConfigChange(index, 'template', e.target.value)}
               placeholder="Template (use [response] for user input)"
             />
-          </>
+          </div>
         )
 
       case ACTION_TYPES.CHANGE_COLOR:
         return (
-          <Input
-            type="color"
-            value={action.color || '#000000'}
-            onChange={(e) => handleActionConfigChange(index, 'color', e.target.value)}
-          />
+          <div className="space-y-2">
+            <Label>Button Color</Label>
+            <Input
+              type="color"
+              value={action.color || '#000000'}
+              onChange={(e) => handleActionConfigChange(index, 'color', e.target.value)}
+              className="h-10"
+            />
+          </div>
         )
 
       default:
@@ -232,8 +150,8 @@ const ConfigForm = ({ onSave }) => {
   }
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <div>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-2">
         <Label>Button Label</Label>
         <Input
           type="text"
@@ -244,45 +162,54 @@ const ConfigForm = ({ onSave }) => {
         />
       </div>
 
-      <ActionList>
+      <div className="space-y-4">
         {actions.map((action, index) => (
-          <ActionItem key={index}>
-            <Label>Action Type</Label>
-            <Select
-              value={action.type}
-              onChange={(e) => handleActionTypeChange(index, e.target.value)}
-            >
-              {Object.values(ACTION_TYPES).map(type => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </Select>
+          <Card key={index} className="p-4 space-y-4">
+            <div className="space-y-2">
+              <Label>Action Type</Label>
+              <Select
+                value={action.type}
+                onValueChange={(value) => handleActionTypeChange(index, value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select action type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.values(ACTION_TYPES).map(type => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             {renderActionConfig(action, index)}
-            <ButtonGroup>
+            <div className="flex justify-end">
               <Button 
                 type="button" 
                 onClick={() => handleRemoveAction(index)}
-                className="remove"
+                variant="destructive"
               >
                 Remove Action
               </Button>
-            </ButtonGroup>
-          </ActionItem>
+            </div>
+          </Card>
         ))}
-      </ActionList>
+      </div>
 
-      <ButtonGroup>
+      <div className="flex gap-4">
         <Button 
           type="button" 
           onClick={handleAddAction}
-          className="secondary"
+          variant="outline"
         >
           Add Action
         </Button>
         <Button type="submit">
           Save Configuration
         </Button>
-      </ButtonGroup>
-    </Form>
+      </div>
+    </form>
   )
 }
 

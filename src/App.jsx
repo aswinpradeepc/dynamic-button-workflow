@@ -1,75 +1,64 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import styled from '@emotion/styled'
+import { Button } from './components/ui/button'
 import ConfigForm from './components/ConfigForm'
 import DynamicButton from './components/DynamicButton'
 import logo from './assets/logo.png'
 
-const Container = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-`
+function App() {
+  return (
+    <Router>
+      <div className="min-h-screen bg-gray-50">
+        <nav className="bg-white shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between h-16">
+              <div className="flex space-x-4 items-center">
+                <Link to="/" className="text-xl font-bold text-gray-900">
+                  Dynamic Button Workflow
+                </Link>
+              </div>
+              <div className="flex items-center space-x-4">
+                <Link to="/">
+                  <Button variant="ghost">Config</Button>
+                </Link>
+                <Link to="/output">
+                  <Button variant="outline">Output</Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </nav>
 
-const Header = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 0;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid #eef1f6;
-`
+        <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <Routes>
+            <Route path="/" element={<ConfigPage />} />
+            <Route path="/output" element={<OutputPage />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
+  )
+}
 
-const Logo = styled.img`
-  height: 40px;
-`
-
-const Nav = styled.nav`
-  display: flex;
-  gap: 2rem;
-  
-  a {
-    text-decoration: none;
-    color: #344767;
-    font-weight: 500;
-    font-size: 1rem;
-    transition: color 0.3s ease;
-    
-    &:hover {
-      color: #2563eb;
-    }
-  }
-`
-
-const PageContainer = styled.div`
-  background: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  padding: 2rem;
-`
-
-const PageTitle = styled.h1`
-  color: #344767;
-  font-size: 1.75rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-`
-
-const ConfigPage = () => {
+// Config Page Component
+function ConfigPage() {
   const handleSave = (config) => {
     localStorage.setItem('buttonConfig', JSON.stringify(config))
     alert('Configuration saved successfully!')
   }
 
   return (
-    <PageContainer>
-      <PageTitle>Configure Button</PageTitle>
-      <ConfigForm onSave={handleSave} />
-    </PageContainer>
+    <div className="space-y-6">
+      <div className="bg-white shadow-sm rounded-lg p-6">
+        <h2 className="text-2xl font-semibold mb-6">Button Configuration</h2>
+        <ConfigForm onSave={handleSave} />
+      </div>
+    </div>
   )
 }
 
-const OutputPage = () => {
+// Output Page Component
+function OutputPage() {
   const [config, setConfig] = useState(null)
 
   useEffect(() => {
@@ -80,30 +69,12 @@ const OutputPage = () => {
   }, [])
 
   return (
-    <PageContainer>
-      <PageTitle>Button Output</PageTitle>
-      <DynamicButton config={config} />
-    </PageContainer>
-  )
-}
-
-function App() {
-  return (
-    <Router>
-      <Container>
-        <Header>
-          <Logo src={logo} alt="Humblx" />
-          <Nav>
-            <Link to="/">Config</Link>
-            <Link to="/output">Output</Link>
-          </Nav>
-        </Header>
-        <Routes>
-          <Route path="/" element={<ConfigPage />} />
-          <Route path="/output" element={<OutputPage />} />
-        </Routes>
-      </Container>
-    </Router>
+    <div className="space-y-6">
+      <div className="bg-white shadow-sm rounded-lg p-6">
+        <h2 className="text-2xl font-semibold mb-6">Dynamic Button</h2>
+        <DynamicButton config={config} />
+      </div>
+    </div>
   )
 }
 
