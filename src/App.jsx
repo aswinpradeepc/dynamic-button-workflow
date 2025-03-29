@@ -8,28 +8,30 @@ import logo from './assets/logo.png'
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
-        <nav className="bg-white shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16">
-              <div className="flex space-x-4 items-center">
-                <Link to="/" className="text-xl font-bold text-gray-900">
-                  Dynamic Button Workflow
-                </Link>
-              </div>
-              <div className="flex items-center space-x-4">
-                <Link to="/">
-                  <Button variant="ghost">Config</Button>
-                </Link>
-                <Link to="/output">
-                  <Button variant="outline">Output</Button>
-                </Link>
+      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-100 to-emerald-50 bg-gradient-animate">
+        <div className="fixed w-full top-4 px-4 z-10">
+          <nav className="bg-white/80 backdrop-blur-sm rounded-lg shadow-lg mx-auto max-w-7xl">
+            <div className="px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between h-16">
+                <div className="flex items-center">
+                  <Link to="/" className="flex items-center">
+                    <img src={logo} alt="Logo" className="h-8 w-auto" />
+                  </Link>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <Link to="/">
+                    <Button variant="ghost" className="text-gray-600 hover:text-gray-900">Config</Button>
+                  </Link>
+                  <Link to="/output">
+                    <Button variant="ghost" className="text-gray-600 hover:text-gray-900">Output</Button>
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        </nav>
+          </nav>
+        </div>
 
-        <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <main className="max-w-7xl mx-auto py-24 sm:px-6 lg:px-8">
           <Routes>
             <Route path="/" element={<ConfigPage />} />
             <Route path="/output" element={<OutputPage />} />
