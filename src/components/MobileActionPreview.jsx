@@ -1,4 +1,4 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from './ui/sheet'
 import { Button } from './ui/button'
 import { Menu } from 'lucide-react'
 
@@ -14,6 +14,9 @@ const MobileActionPreview = ({ actions }) => {
         <SheetContent side="left">
           <SheetHeader>
             <SheetTitle>Action Order</SheetTitle>
+            <SheetDescription>
+              Current sequence of actions to be executed
+            </SheetDescription>
           </SheetHeader>
           <div className="mt-4">
             {actions.map((action, index) => (
