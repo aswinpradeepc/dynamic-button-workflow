@@ -305,16 +305,20 @@ const ConfigForm = ({ onSave }) => {
               ))}
             </div>
 
-            <div className="flex justify-between items-center">
-              <div className="flex gap-4">
+            <div className="flex flex-wrap gap-4 items-center">
+              <div className="flex flex-wrap gap-4 flex-1">
                 <Button 
                   type="button" 
                   onClick={handleAddAction}
                   variant="outline"
+                  className="flex-1 sm:flex-none"
                 >
                   Add Action
                 </Button>
-                <Button type="submit">
+                <Button 
+                  type="submit"
+                  className="flex-1 sm:flex-none"
+                >
                   Save Configuration
                 </Button>
               </div>
@@ -322,6 +326,7 @@ const ConfigForm = ({ onSave }) => {
                 type="button"
                 variant="outline"
                 onClick={handleNewConfig}
+                className="w-full sm:w-auto"
               >
                 Create New Config
               </Button>

@@ -4,6 +4,7 @@ import { Button } from './components/ui/button'
 import ConfigForm from './components/ConfigForm'
 import DynamicButton from './components/DynamicButton'
 import SavedConfigs from './components/SavedConfigs'
+import { Settings, Play, Save } from 'lucide-react'
 import logo from './assets/logo.png'
 
 function App() {
@@ -19,13 +20,14 @@ function App() {
                     <img src={logo} alt="Logo" className="h-8 w-auto" />
                   </Link>
                 </div>
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2 sm:space-x-4">
                   <Link to="/">
                     <Button
                       variant="outline"
                       className="text-black hover:shadow-lg hover:translate-y-[-2px] transition-all duration-200"
                     >
-                      Config
+                      <Settings className="h-4 w-4 sm:mr-2" />
+                      <span className="hidden sm:inline">Config</span>
                     </Button>
                   </Link>
                   <Link to="/output">
@@ -33,7 +35,8 @@ function App() {
                       variant="outline"
                       className="text-black hover:shadow-lg hover:translate-y-[-2px] transition-all duration-200"
                     >
-                      Output
+                      <Play className="h-4 w-4 sm:mr-2" />
+                      <span className="hidden sm:inline">Output</span>
                     </Button>
                   </Link>
                   <Link to="/saved">
@@ -41,7 +44,8 @@ function App() {
                       variant="outline"
                       className="text-black hover:shadow-lg hover:translate-y-[-2px] transition-all duration-200"
                     >
-                      Saved Configs
+                      <Save className="h-4 w-4 sm:mr-2" />
+                      <span className="hidden sm:inline">Saved Configs</span>
                     </Button>
                   </Link>
                 </div>
