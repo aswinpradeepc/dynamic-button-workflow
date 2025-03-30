@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { Button } from './components/ui/button'
 import ConfigForm from './components/ConfigForm'
 import DynamicButton from './components/DynamicButton'
+import SavedConfigs from './components/SavedConfigs'
 import logo from './assets/logo.png'
 
 function App() {
@@ -35,6 +36,14 @@ function App() {
                       Output
                     </Button>
                   </Link>
+                  <Link to="/saved">
+                    <Button
+                      variant="outline"
+                      className="text-black hover:shadow-lg hover:translate-y-[-2px] transition-all duration-200"
+                    >
+                      Saved Configs
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -45,6 +54,7 @@ function App() {
           <Routes>
             <Route path="/" element={<ConfigPage />} />
             <Route path="/output" element={<OutputPage />} />
+            <Route path="/saved" element={<SavedConfigs />} />
           </Routes>
         </main>
       </div>
@@ -57,7 +67,14 @@ function ConfigPage() {
   const navigate = useNavigate(); // Initialize the navigate function
 
   const handleSave = (config) => {
+    // Save current config
     localStorage.setItem('buttonConfig', JSON.stringify(config));
+    
+    // Save to saved configs list
+    const savedConfigs = JSON.parse(localStorage.getItem('savedConfigs') || '[]');
+    savedConfigs.push(config);
+    localStorage.setItem('savedConfigs', JSON.stringify(savedConfigs));
+    
     alert('Configuration saved successfully!');
     navigate('/output'); // Redirect to the output page
   };

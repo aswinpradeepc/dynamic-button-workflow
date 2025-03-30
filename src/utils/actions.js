@@ -60,9 +60,8 @@ export const executeAction = async (action, setOutput, buttonRef, setDisabled) =
       break
 
     case ACTION_TYPES.CHANGE_COLOR:
-      if (buttonRef.current) {
-        buttonRef.current.style.backgroundColor = action.color || 
-          '#' + Math.floor(Math.random()*16777215).toString(16)
+      if (buttonRef.current && action.color) {
+        buttonRef.current.style.backgroundColor = action.color
       }
       break
 
@@ -87,7 +86,7 @@ export const getActionConfig = (type) => {
     case ACTION_TYPES.PROMPT_SHOW:
       return { prompt: '', template: 'Response: [response]' }
     case ACTION_TYPES.CHANGE_COLOR:
-      return { color: '' }
+      return { color: '#000000' }
     default:
       return {}
   }

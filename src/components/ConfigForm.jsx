@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
@@ -14,6 +14,15 @@ const ConfigForm = ({ onSave }) => {
   const [actions, setActions] = useState([])
   const dragTimeoutRef = useRef(null)
   const dragPositionRef = useRef(null)
+
+  useEffect(() => {
+    const savedConfig = localStorage.getItem('buttonConfig')
+    if (savedConfig) {
+      const config = JSON.parse(savedConfig)
+      setButtonLabel(config.buttonLabel || '')
+      setActions(config.actions || [])
+    }
+  }, [])
 
   const handleAddAction = () => {
     setActions([...actions, {
@@ -213,89 +222,117 @@ const ConfigForm = ({ onSave }) => {
     }
   }
 
+  const handleNewConfig = () => {
+    // Save current config to saved configs if it exists
+    const currentConfig = localStorage.getItem('buttonConfig')
+    if (currentConfig) {
+      const savedConfigs = JSON.parse(localStorage.getItem('savedConfigs') || '[]')
+      savedConfigs.push(JSON.parse(currentConfig))
+      localStorage.setItem('savedConfigs', JSON.stringify(savedConfigs))
+    }
+
+    // Clear form for new config
+    localStorage.removeItem('buttonConfig')
+    setButtonLabel('')
+    setActions([])
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      <div className="flex flex-col lg:flex-row lg:gap-8">
-        <div className="flex-1 space-y-8">
-          <div className="space-y-2">
-            <Label htmlFor="buttonLabel">Button Label</Label>
-            <Input
-              id="buttonLabel"
-              value={buttonLabel}
-              onChange={(e) => setButtonLabel(e.target.value)}
-              placeholder="Enter button label"
-              required
-            />
-          </div>
+    <div>
+      <h2 className="text-lg font-semibold mb-6">Button Configuration</h2>
+      <form onSubmit={handleSubmit} className="space-y-8">
+        <div className="flex flex-col lg:flex-row lg:gap-8">
+          <div className="flex-1 space-y-8">
+            <div className="space-y-2">
+              <Label htmlFor="buttonLabel">Button Label</Label>
+              <Input
+                id="buttonLabel"
+                value={buttonLabel}
+                onChange={(e) => setButtonLabel(e.target.value)}
+                placeholder="Enter button label"
+                required
+              />
+            </div>
 
-          <div className="space-y-4">
-            {actions.map((action, index) => (
-              <Card 
-                key={index} 
-                className="p-4 relative action-card transition-transform duration-200 hover:cursor-move"
-                draggable
-                data-index={index}
-                onDragStart={(e) => handleDragStart(e, index)}
-                onDragEnd={handleDragEnd}
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, index)}
-              >
-                <div
-                  className="absolute left-0 top-0 bottom-0 px-2 flex items-center hover:bg-gray-100 border-r"
+            <div className="space-y-4">
+              {actions.map((action, index) => (
+                <Card 
+                  key={index} 
+                  className="p-4 relative action-card transition-transform duration-200 hover:cursor-move"
+                  draggable
+                  data-index={index}
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragEnd={handleDragEnd}
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, index)}
                 >
-                  <GripVertical className="h-6 w-4" />
-                </div>
-                <div className="ml-8 space-y-4">
-                  <div className="space-y-2">
-                    <Label>Action Type</Label>
-                    <Select
-                      value={action.type}
-                      onValueChange={(value) => handleActionTypeChange(index, value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select action type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.values(ACTION_TYPES).map(type => (
-                          <SelectItem key={type} value={type}>
-                            {type}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                  <div
+                    className="absolute left-0 top-0 bottom-0 px-2 flex items-center hover:bg-gray-100 border-r"
+                  >
+                    <GripVertical className="h-6 w-4" />
                   </div>
-                  {renderActionConfig(action, index)}
-                  <div className="flex justify-end">
-                    <Button 
-                      type="button" 
-                      onClick={() => handleRemoveAction(index)}
-                      variant="destructive"
-                    >
-                      Remove Action
-                    </Button>
+                  <div className="ml-8 space-y-4">
+                    <div className="space-y-2">
+                      <Label>Action Type</Label>
+                      <Select
+                        value={action.type}
+                        onValueChange={(value) => handleActionTypeChange(index, value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select action type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.values(ACTION_TYPES).map(type => (
+                            <SelectItem key={type} value={type}>
+                              {type}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    {renderActionConfig(action, index)}
+                    <div className="flex justify-end">
+                      <Button 
+                        type="button" 
+                        onClick={() => handleRemoveAction(index)}
+                        variant="destructive"
+                      >
+                        Remove Action
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </Card>
-            ))}
-          </div>
+                </Card>
+              ))}
+            </div>
 
-          <div className="flex gap-4">
-            <Button 
-              type="button" 
-              onClick={handleAddAction}
-              variant="outline"
-            >
-              Add Action
-            </Button>
-            <Button type="submit">
-              Save Configuration
-            </Button>
+            <div className="flex justify-between items-center">
+              <div className="flex gap-4">
+                <Button 
+                  type="button" 
+                  onClick={handleAddAction}
+                  variant="outline"
+                >
+                  Add Action
+                </Button>
+                <Button type="submit">
+                  Save Configuration
+                </Button>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleNewConfig}
+              >
+                Create New Config
+              </Button>
+            </div>
+
           </div>
+          <ActionOrderPreview actions={actions} />
         </div>
-        <ActionOrderPreview actions={actions} />
-      </div>
-      <MobileActionPreview actions={actions} />
-    </form>
+        <MobileActionPreview actions={actions} />
+      </form>
+    </div>
   )
 }
 
