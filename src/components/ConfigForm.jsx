@@ -4,6 +4,7 @@ import { Input } from './ui/input'
 import { Label } from './ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { Card } from './ui/card'
+import { GripVertical } from 'lucide-react'
 import { ACTION_TYPES, getActionConfig } from '../utils/actions'
 
 const ConfigForm = ({ onSave }) => {
@@ -45,6 +46,42 @@ const ConfigForm = ({ onSave }) => {
       buttonLabel,
       actions
     })
+  }
+
+  const handleDragStart = (e, index) => {
+    e.dataTransfer.setData('text/plain', index)
+    e.target.closest('.action-card').classList.add('dragging')
+  }
+
+  const handleDragEnd = (e) => {
+    e.target.closest('.action-card').classList.remove('dragging')
+  }
+
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    const dragCard = document.querySelector('.dragging')
+    const cards = [...document.querySelectorAll('.action-card:not(.dragging)')]
+    
+    const card = cards.find(card => {
+      const box = card.getBoundingClientRect()
+      const draggedY = e.clientY
+      return draggedY < box.bottom
+    })
+
+    if (card) {
+      card.parentNode.insertBefore(dragCard, card)
+    }
+  }
+
+  const handleDrop = (e, dropIndex) => {
+    e.preventDefault()
+    const dragIndex = parseInt(e.dataTransfer.getData('text/plain'))
+    if (dragIndex === dropIndex) return
+
+    const newActions = [...actions]
+    const [removed] = newActions.splice(dragIndex, 1)
+    newActions.splice(dropIndex, 0, removed)
+    setActions(newActions)
   }
 
   const renderActionConfig = (action, index) => {
@@ -164,34 +201,49 @@ const ConfigForm = ({ onSave }) => {
 
       <div className="space-y-4">
         {actions.map((action, index) => (
-          <Card key={index} className="p-4 space-y-4">
-            <div className="space-y-2">
-              <Label>Action Type</Label>
-              <Select
-                value={action.type}
-                onValueChange={(value) => handleActionTypeChange(index, value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select action type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.values(ACTION_TYPES).map(type => (
-                    <SelectItem key={type} value={type}>
-                      {type}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          <Card 
+            key={index} 
+            className="p-4 relative action-card transition-transform duration-200 hover:cursor-move"
+            draggable
+            onDragStart={(e) => handleDragStart(e, index)}
+            onDragEnd={handleDragEnd}
+            onDragOver={handleDragOver}
+            onDrop={(e) => handleDrop(e, index)}
+          >
+            <div
+              className="absolute left-0 top-0 bottom-0 px-2 flex items-center hover:bg-gray-100 border-r"
+            >
+              <GripVertical className="h-6 w-4" />
             </div>
-            {renderActionConfig(action, index)}
-            <div className="flex justify-end">
-              <Button 
-                type="button" 
-                onClick={() => handleRemoveAction(index)}
-                variant="destructive"
-              >
-                Remove Action
-              </Button>
+            <div className="ml-8 space-y-4">
+              <div className="space-y-2">
+                <Label>Action Type</Label>
+                <Select
+                  value={action.type}
+                  onValueChange={(value) => handleActionTypeChange(index, value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select action type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.values(ACTION_TYPES).map(type => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              {renderActionConfig(action, index)}
+              <div className="flex justify-end">
+                <Button 
+                  type="button" 
+                  onClick={() => handleRemoveAction(index)}
+                  variant="destructive"
+                >
+                  Remove Action
+                </Button>
+              </div>
             </div>
           </Card>
         ))}
